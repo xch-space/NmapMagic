@@ -1,0 +1,50 @@
+Upgrading OpenSSL
+-----------------
+
+I. Additional Requirements
+
+1) Install Strawberry Perl. Cygwin's Perl does not work because it uses Unix
+   directory separators. We may need Cygwin's perl for other things, though.
+
+2) Install nasm from Cygwin.
+   If necessary, add the bin directory to end of %PATH%.
+   It has to be at the end so that link.exe comes before /usr/bin/link.
+
+  PATH=%PATH%;C:\cygwin\bin
+
+
+II. Compiling OpenSSL from source
+
+3) Grab and extract the latest sources from openssl.org
+4) Create C:\OpenSSL for installation (delete old first)
+
+  rd /s C:\OpenSSL
+  mkdir C:\OpenSSL
+
+5) Open the Visual Studio 2019 Developer Command Prompt
+6) cd to the OpenSSL source directory
+7) Configure OpenSSL
+
+  perl Configure --prefix=C:\OpenSSL no-comp enable-legacy enable-weak-ssl-ciphers enable-ssl3 enable-ssl3-method no-dso VC-WIN32
+
+Note #1: The slash after the C: in the configure line is significant
+
+8) Configure OpenSSL to build with DEP, ASLR, SAFESEH, and CFG (this quoting is for cmd.exe):
+
+  perl -pi -e "s|$| /NXCOMPAT /DYNAMICBASE /SAFESEH /guard:cf| if /^LDFLAGS/" makefile
+  perl -pi -e "s|$| /guard:cf| if /^CFLAGS/" makefile
+
+9) Compile and Install OpenSSL
+
+  nmake -f makefile install_dev
+
+
+III. Making OpenSSL available to Nmap
+
+10) Copy C:\OpenSSL over /nmap-mswin32-aux/OpenSSL.
+
+  rsync -rvC --delete /cygdrive/c/OpenSSL/ nmap-mswin32-aux/OpenSSL/
+
+Note #1: The trailing slashes/ are important to rsync!
+Note #2: You should do this from within cygwin because rsync gets confused with
+         drive letter syntax.
