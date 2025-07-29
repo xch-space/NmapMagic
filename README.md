@@ -16,6 +16,8 @@ NmapMagic
 - visual studio 2019 C++ 桌面开发环境
 - nmap-mswin32-aux
   - svn checkout https://svn.nmap.org/nmap-mswin32-aux
+- nmap
+  - git clone https://github.com/nmap/nmap.git 
 
 ## Nmap魔改
 
