@@ -3,9 +3,11 @@ nmap魔改小计
 
 ## 目录结构
 
+```text
 NmapMagic
 ├── nmap
 └── nmap-mswin32-aux
+```
 
 ## 环境配置
 
